@@ -24,9 +24,9 @@ interface FormData {
 }
 
 interface Question {
-  id: keyof FormData;
+  id: keyof Omit<FormData, 'consentGiven'>;
   question: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'checkbox';
+  type: 'text' | 'number' | 'select' | 'textarea';
   options?: string[];
   required: boolean;
 }

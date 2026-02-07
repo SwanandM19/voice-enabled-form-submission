@@ -5,7 +5,7 @@ import { verifyToken } from '@/lib/auth';
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.headers.get('authorization')?.split(' ')[1];
@@ -13,6 +13,8 @@ export async function DELETE(
     if (!token || !verifyToken(token)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const params = await context.params;
 
     await dbConnect();
     await Patient.findByIdAndDelete(params.id);

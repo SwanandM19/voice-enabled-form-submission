@@ -3,7 +3,6 @@ import dbConnect from '@/lib/mongodb';
 import Patient from '@/lib/models/Patient';
 import { verifyToken } from '@/lib/auth';
 
-// GET - Fetch all patients (Admin only)
 export async function GET(request: NextRequest) {
   try {
     const token = request.headers.get('authorization')?.split(' ')[1];
@@ -21,7 +20,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Create new patient
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

@@ -9,7 +9,6 @@ export default function HomePage() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    // Auto-open modal after 1 second
     const timer = setTimeout(() => {
       setShowModal(true);
     }, 1000);

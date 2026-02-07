@@ -1,20 +1,49 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import RegistrationModeModal from '@/components/RegistrationModeModal';
 import VoiceOnboardingModal from '@/components/VoiceOnboardingModal';
+import VoiceAIModal from '@/components/VoiceAIModal';
+import PreviewModal from '@/components/PreviewModal';
 import { Stethoscope, Calendar, Users, Shield } from 'lucide-react';
 import Link from 'next/link';
 
 export default function HomePage() {
-  const [showModal, setShowModal] = useState(false);
+  const [showModeModal, setShowModeModal] = useState(false);
+  const [showManualForm, setShowManualForm] = useState(false);
+  const [showVoiceAI, setShowVoiceAI] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [formData, setFormData] = useState<any>(null);
 
   useEffect(() => {
+    // Auto-open mode selection after 1 second
     const timer = setTimeout(() => {
-      setShowModal(true);
+      setShowModeModal(true);
     }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handleModeSelection = (mode: 'manual' | 'voice') => {
+    setShowModeModal(false);
+    
+    if (mode === 'manual') {
+      setShowManualForm(true);
+    } else {
+      setShowVoiceAI(true);
+    }
+  };
+
+  const handleVoiceAIComplete = (data: any) => {
+    setShowVoiceAI(false);
+    setFormData(data);
+    setShowPreview(true);
+  };
+
+  const handlePreviewClose = () => {
+    setShowPreview(false);
+    setFormData(null);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -42,7 +71,7 @@ export default function HomePage() {
             Your health is our priority. Experience seamless voice-enabled registration.
           </p>
           <button
-            onClick={() => setShowModal(true)}
+            onClick={() => setShowModeModal(true)}
             className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 shadow-lg transform transition hover:scale-105"
           >
             Start Registration
@@ -76,7 +105,29 @@ export default function HomePage() {
         </div>
       </main>
 
-      <VoiceOnboardingModal isOpen={showModal} onClose={() => setShowModal(false)} />
+      {/* Modals */}
+      <RegistrationModeModal
+        isOpen={showModeModal}
+        onClose={() => setShowModeModal(false)}
+        onSelectMode={handleModeSelection}
+      />
+
+      <VoiceOnboardingModal
+        isOpen={showManualForm}
+        onClose={() => setShowManualForm(false)}
+      />
+
+      <VoiceAIModal
+        isOpen={showVoiceAI}
+        onClose={() => setShowVoiceAI(false)}
+        onComplete={handleVoiceAIComplete}
+      />
+
+      <PreviewModal
+        isOpen={showPreview}
+        onClose={handlePreviewClose}
+        formData={formData}
+      />
     </div>
   );
 }
